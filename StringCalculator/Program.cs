@@ -18,6 +18,9 @@ class Program
             if (input == null || input.ToLower() == "exit")
                 break;
 
+            // Replace literal "\n" with the actual newline character for command line input
+            input = input.Replace(@"\n", "\n");
+
             // Call the Add method and output the result
             try
             {

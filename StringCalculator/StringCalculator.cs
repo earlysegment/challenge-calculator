@@ -9,10 +9,24 @@ public class StringCalculator
         // Handle null or empty input
         if (string.IsNullOrWhiteSpace(numbers)) return 0;
 
-        // Define the delimiters: comma and newline
-        var delimiters = new[] { ',', '\n' };
+        string[] delimiters = { ",", "\n" }; // Default delimiters
 
-        // Split the numbers by both comma and newline delimiters
+        // Check if a custom delimiter is provided
+        if (numbers.StartsWith("//"))
+        {
+            int newlineIndex = numbers.IndexOf('\n');
+            if (newlineIndex == -1)
+            {
+                throw new ArgumentException("Input format is incorrect. Missing newline after custom delimiter.");
+            }
+
+            // Extract the custom delimiter between the // and \n
+            var delimiterSection = numbers.Substring(2, newlineIndex - 2);
+            delimiters = new[] { delimiterSection };
+            numbers = numbers.Substring(newlineIndex + 1); // Remove the delimiter part
+        }
+
+        // Split the numbers using the delimiters
         var numberArray = numbers.Split(delimiters, StringSplitOptions.None);
 
         // List to track negative numbers
