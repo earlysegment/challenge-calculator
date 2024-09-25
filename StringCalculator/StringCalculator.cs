@@ -26,10 +26,12 @@ public class StringCalculator
             {
                 if (result < 0)
                 {
-                    negativeNumbers.Add(result);  // Collect negative numbers
+                    // Collect negative numbers
+                    negativeNumbers.Add(result);
                 }
-                else
+                else if (result <= 1000)
                 {
+                    // Sum numbers less than or equal to 1000
                     sum += result;
                 }
             }

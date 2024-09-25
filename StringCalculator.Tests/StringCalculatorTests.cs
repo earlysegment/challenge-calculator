@@ -24,7 +24,8 @@ public class StringCalculatorTests
     public void Add_TwoValidNumbers_ReturnsSum()
     {
         var calculator = new StringCalculator();
-        Assert.That(calculator.Add("1,5000"), Is.EqualTo(5001));
+        // Use numbers less than or equal to 1000 to match the behavior after Requirement #5
+        Assert.That(calculator.Add("1,5"), Is.EqualTo(6));  // Now using 1 and 5
     }
 
     // Requirement 2: Sum of multiple numbers (no limit)
@@ -82,4 +83,13 @@ public class StringCalculatorTests
         var ex = Assert.Throws<ArgumentException>(() => calculator.Add("-5"));
         Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -5"));
     }
+
+    // Requirement 5: Ignored values greater than 1000 in the calculation
+    [Test]
+    public void Add_NumbersGreaterThan1000_AreIgnored()
+    {
+        var calculator = new StringCalculator();
+        Assert.That(calculator.Add("2,1001,6"), Is.EqualTo(8));  // 1001 is ignored
+    }
+
 }
