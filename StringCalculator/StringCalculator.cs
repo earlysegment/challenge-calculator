@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 public class StringCalculator
 {
@@ -8,27 +9,38 @@ public class StringCalculator
         // Handle null or empty input
         if (string.IsNullOrWhiteSpace(numbers)) return 0;
 
-        // Replace the literal string "\n" with an actual newline character
-        numbers = numbers.Replace(@"\n", "\n");
-
         // Define the delimiters: comma and newline
         var delimiters = new[] { ',', '\n' };
 
         // Split the numbers by both comma and newline delimiters
         var numberArray = numbers.Split(delimiters, StringSplitOptions.None);
 
-        // Convert each valid number, invalid numbers are treated as 0
-        return numberArray.Sum(x =>
+        // List to track negative numbers
+        var negativeNumbers = new List<int>();
+
+        // Sum the valid numbers and collect negative numbers
+        int sum = 0;
+        foreach (var num in numberArray)
         {
-            if (int.TryParse(x, out int result))
+            if (int.TryParse(num, out int result))
             {
-                return result;
+                if (result < 0)
+                {
+                    negativeNumbers.Add(result);  // Collect negative numbers
+                }
+                else
+                {
+                    sum += result;
+                }
             }
-            else
-            {
-                Console.WriteLine($"Warning: '{x}' is not a valid number. Treated as 0.");
-                return 0;
-            }
-        });
+        }
+
+        // If there are negative numbers, throw an exception
+        if (negativeNumbers.Any())
+        {
+            throw new ArgumentException($"Negatives not allowed: {string.Join(", ", negativeNumbers)}");
+        }
+
+        return sum;
     }
 }

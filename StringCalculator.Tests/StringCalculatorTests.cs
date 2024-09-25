@@ -65,4 +65,21 @@ public class StringCalculatorTests
         var calculator = new StringCalculator();
         Assert.That(calculator.Add("1\n2\n3"), Is.EqualTo(6)); // 1 + 2 + 3 = 6
     }
+
+    // Requirement 4: Throw exception on negative numbers
+    [Test]
+    public void Add_NegativeNumbers_ThrowsException()
+    {
+        var calculator = new StringCalculator();
+        var ex = Assert.Throws<ArgumentException>(() => calculator.Add("1,-2,3,-4"));
+        Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -2, -4"));
+    }
+
+    [Test]
+    public void Add_SingleNegativeNumber_ThrowsException()
+    {
+        var calculator = new StringCalculator();
+        var ex = Assert.Throws<ArgumentException>(() => calculator.Add("-5"));
+        Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -5"));
+    }
 }
