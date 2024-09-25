@@ -8,8 +8,14 @@ public class StringCalculator
         // Handle null or empty input
         if (string.IsNullOrWhiteSpace(numbers)) return 0;
 
-        // Split the numbers by comma
-        var numberArray = numbers.Split(',');
+        // Replace the literal string "\n" with an actual newline character
+        numbers = numbers.Replace(@"\n", "\n");
+
+        // Define the delimiters: comma and newline
+        var delimiters = new[] { ',', '\n' };
+
+        // Split the numbers by both comma and newline delimiters
+        var numberArray = numbers.Split(delimiters, StringSplitOptions.None);
 
         // Convert each valid number, invalid numbers are treated as 0
         return numberArray.Sum(x =>

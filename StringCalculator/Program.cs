@@ -9,7 +9,7 @@ class Program
         while (true) // Continuous input (Optional Stretch Goal)
         {
             // Prompt the user for input
-            Console.WriteLine("Enter a string of numbers separated by commas (or type 'exit' to quit):");
+            Console.WriteLine("Enter a string of numbers separated by commas or newlines (or type 'exit' to quit):");
 
             // Read input from the command line
             string? input = Console.ReadLine(); // Allow for null

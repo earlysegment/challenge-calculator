@@ -50,4 +50,19 @@ public class StringCalculatorTests
         var calculator = new StringCalculator();
         Assert.That(calculator.Add("1,,2"), Is.EqualTo(3));
     }
+
+    // Requirement 3: Newline characters as delimiters
+    [Test]
+    public void Add_NewlineAsDelimiter_ReturnsSum()
+    {
+        var calculator = new StringCalculator();
+        Assert.That(calculator.Add("1\n2,3"), Is.EqualTo(6)); // 1 + 2 + 3 = 6
+    }
+
+    [Test]
+    public void Add_NewlineOnlyAsDelimiter_ReturnsSum()
+    {
+        var calculator = new StringCalculator();
+        Assert.That(calculator.Add("1\n2\n3"), Is.EqualTo(6)); // 1 + 2 + 3 = 6
+    }
 }
