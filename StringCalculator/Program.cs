@@ -5,11 +5,29 @@ class Program
     static void Main(string[] args)
     {
         var calculator = new StringCalculator();
+        
+        while (true) // Continuous input (Optional Stretch Goal)
+        {
+            // Prompt the user for input
+            Console.WriteLine("Enter a string of numbers separated by commas (or type 'exit' to quit):");
 
-        // Example test cases
-        Console.WriteLine(calculator.Add("1,2"));    // Output: 3
-        Console.WriteLine(calculator.Add("4,-3"));   // Output: 1
-        Console.WriteLine(calculator.Add("5,tytyt")); // Output: 5
-        Console.WriteLine(calculator.Add(""));       // Output: 0
+            // Read input from the command line
+            string? input = Console.ReadLine(); // Allow for null
+
+            // Check if input is null or exit command
+            if (input == null || input.ToLower() == "exit")
+                break;
+
+            // Call the Add method and output the result
+            try
+            {
+                int result = calculator.Add(input); // Safe because Add now accepts nullable string
+                Console.WriteLine($"The result is: {result}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }
