@@ -1,0 +1,46 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userossc
+*.sln.docstates
+
+# Ignore lock files
+*.lock
+
+# Ignore test result files
+TestResults/
+
+# Ignore compiled binaries
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.vspscc
+*.vssscc
+
+# Ignore NuGet packages
+*.nupkg
+# Uncomment if you have a NuGet.config file at solution level
+# NuGet.config
+# Uncomment if you have a packages folder at the solution level
+# packages/
+
+# Ignore node_modules (for frontend projects)
+node_modules/
+npm-debug.log
+
+# Ignore any local tool configuration
+local_tools/
+
+# Ignore JetBrains Rider IDE files
+.idea/
+
+# Ignore Mac-specific files
+.DS_Store
