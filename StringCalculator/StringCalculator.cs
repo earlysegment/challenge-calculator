@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class StringCalculator
 {
@@ -8,12 +9,12 @@ public class StringCalculator
     private readonly int _upperBound;
     private string[] _delimiters;
 
-    // Constructor with command-line argument options
-    public StringCalculator(bool denyNegativeNumbers = true, int upperBound = 1000, string[]? customDelimiters = null)
+    // Constructor with IStringCalculatorSettings
+    public StringCalculator(IStringCalculatorSettings settings)
     {
-        _denyNegativeNumbers = denyNegativeNumbers;
-        _upperBound = upperBound;
-        _delimiters = customDelimiters ?? new[] { ",", "\n" };
+        _denyNegativeNumbers = settings.DenyNegativeNumbers;
+        _upperBound = settings.UpperBound;
+        _delimiters = settings.CustomDelimiters ?? new[] { ",", "\n" };
     }
 
     public int Add(string? numbers)
@@ -61,9 +62,9 @@ public class StringCalculator
     private string[] ParseMultipleDelimiters(string delimiterSection)
     {
         var delimiterList = new List<string>();
-        var matches = System.Text.RegularExpressions.Regex.Matches(delimiterSection, @"\[(.*?)\]");
+        var matches = Regex.Matches(delimiterSection, @"\[(.*?)\]");
 
-        foreach (System.Text.RegularExpressions.Match match in matches)
+        foreach (Match match in matches)
         {
             delimiterList.Add(match.Groups[1].Value);
         }

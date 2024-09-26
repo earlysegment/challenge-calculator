@@ -7,7 +7,8 @@ class Program
         // Default settings for command-line arguments
         bool denyNegativeNumbers = true;
         int upperBound = 1000;
-        string[] customDelimiters = { ",", "\n" };
+        var defaultDelimiters = new[] { ",", "\n" };
+        string[] customDelimiters = defaultDelimiters;
 
         // Parse command-line arguments
         foreach (var arg in args)
@@ -27,8 +28,14 @@ class Program
             }
         }
 
-        // Instantiate the calculator with parsed command-line arguments
-        var calculator = new StringCalculator(denyNegativeNumbers, upperBound, customDelimiters);
+        // Merge custom delimiters with the default delimiters
+        customDelimiters = MergeDelimiters(customDelimiters, defaultDelimiters);
+
+        // Create a settings object
+        var settings = new StringCalculatorSettings(denyNegativeNumbers, upperBound, customDelimiters);
+
+        // Instantiate the calculator with the settings
+        var calculator = new StringCalculator(settings);
 
         // Handle Ctrl+C to exit the loop gracefully
         Console.CancelKeyPress += (sender, e) =>
@@ -80,5 +87,14 @@ class Program
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
+    }
+
+    // Helper method to merge custom delimiters with default delimiters
+    static string[] MergeDelimiters(string[] customDelimiters, string[] defaultDelimiters)
+    {
+        var mergedDelimiters = new string[customDelimiters.Length + defaultDelimiters.Length];
+        customDelimiters.CopyTo(mergedDelimiters, 0);
+        defaultDelimiters.CopyTo(mergedDelimiters, customDelimiters.Length);
+        return mergedDelimiters;
     }
 }
