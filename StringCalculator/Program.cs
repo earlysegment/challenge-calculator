@@ -46,8 +46,8 @@ class Program
 
         // Display information for the user
         Console.WriteLine("String Calculator");
-        Console.WriteLine("Enter a string of numbers separated by commas or newlines.");
-        Console.WriteLine("You can also use custom delimiters in the format: //[delimiter]\\n[numbers].");
+        Console.WriteLine("Enter a mathematical expression using numbers, operators (+, -, *, /), and delimiters.");
+        Console.WriteLine("You can also use custom delimiters in the format: //[delimiter]\\n[expression].");
         Console.WriteLine("Available command-line options:");
         Console.WriteLine("--delimiter=\"[delimiter]\" to set a custom delimiter.");
         Console.WriteLine("--allow-negative to allow negative numbers.");
@@ -79,6 +79,11 @@ class Program
             catch (ArgumentException ex)
             {
                 // Handle exceptions such as negative numbers
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (DivideByZeroException ex)
+            {
+                // Handle division by zero
                 Console.WriteLine($"Error: {ex.Message}");
             }
             catch (Exception ex)
