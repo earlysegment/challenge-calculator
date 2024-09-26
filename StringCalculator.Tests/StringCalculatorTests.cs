@@ -142,5 +142,28 @@ public class StringCalculatorTests
         Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -2, -5"));
     }
 
-    
+      // Requirement 8: Multiple custom delimiters of any length
+    [Test]
+    public void Add_MultipleCustomDelimitersOfAnyLength_ReturnsSum()
+    {
+        var calculator = new StringCalculator();
+        Assert.That(calculator.Add("//[*][!!][r9r]\n11r9r22*hh*33!!44"), Is.EqualTo(110));  // Custom delimiters "*", "!!", "r9r"
+    }
+
+    // Requirement 8: Custom delimiters with invalid numbers
+    [Test]
+    public void Add_MultipleCustomDelimiters_InvalidNumbers_ReturnsSumTreatingInvalidAsZero()
+    {
+        var calculator = new StringCalculator();
+        Assert.That(calculator.Add("//[*][!!]\n3*tytyt!!5"), Is.EqualTo(8));  // Custom delimiters "*" and "!!"
+    }
+
+    // Requirement 8: Custom delimiters with negative numbers should throw exception
+    [Test]
+    public void Add_MultipleCustomDelimiters_NegativeNumbers_ThrowsException()
+    {
+        var calculator = new StringCalculator();
+        var ex = Assert.Throws<ArgumentException>(() => calculator.Add("//[***][#]\n3***-2#4"));
+        Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -2"));
+    }
 }

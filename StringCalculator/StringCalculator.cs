@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class StringCalculator
 {
@@ -28,21 +29,36 @@ public class StringCalculator
                 throw new ArgumentException("Input format is incorrect. Missing newline after custom delimiter.");
             }
 
-            if (numbers[2] == '[' && numbers.Contains("]\n"))
+            if (numbers.StartsWith("//[") && numbers.Contains("]\n"))
             {
-                int endBracketIndex = numbers.IndexOf("]\n");
-                var delimiterSection = numbers.Substring(3, endBracketIndex - 3);
-                delimiters = new[] { delimiterSection };
-                return numbers.Substring(endBracketIndex + 2);
+                // Handle multiple custom delimiters
+                string delimiterSection = numbers.Substring(2, newlineIndex - 2);
+                delimiters = ParseMultipleDelimiters(delimiterSection);
+                return numbers.Substring(newlineIndex + 1); // Remove delimiter part
             }
             else
             {
+                // Handle single custom delimiter
                 var delimiterSection = numbers.Substring(2, newlineIndex - 2);
                 delimiters = new[] { delimiterSection };
-                return numbers.Substring(newlineIndex + 1);
+                return numbers.Substring(newlineIndex + 1); // Remove delimiter part
             }
         }
         return numbers;
+    }
+
+    // Parse multiple custom delimiters enclosed in []
+    private string[] ParseMultipleDelimiters(string delimiterSection)
+    {
+        var delimiterList = new List<string>();
+        var matches = Regex.Matches(delimiterSection, @"\[(.*?)\]");
+
+        foreach (Match match in matches)
+        {
+            delimiterList.Add(match.Groups[1].Value);
+        }
+
+        return delimiterList.ToArray();
     }
 
     // Split the numbers based on the delimiters
