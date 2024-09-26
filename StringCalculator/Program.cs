@@ -5,31 +5,49 @@ class Program
     static void Main(string[] args)
     {
         var calculator = new StringCalculator();
-        
-        while (true) // Continuous input (Optional Stretch Goal)
+
+        // Handle Ctrl+C to exit the loop gracefully
+        Console.CancelKeyPress += (sender, e) =>
         {
-            // Prompt the user for input
-            Console.WriteLine("Enter a string of numbers separated by commas, newlines, or a custom delimiter (or type 'exit' to quit). For custom delimiters, use the format //[delimiter]\\n{numbers}:");
+            Console.WriteLine("\nCtrl+C detected. Exiting the program...");
+            Environment.Exit(0); // Immediately terminate the program
+        };
 
-            // Read input from the command line
-            string? input = Console.ReadLine(); // Allow for null
+        Console.WriteLine("String Calculator");
+        Console.WriteLine("Enter a string of numbers separated by commas or newlines.");
+        Console.WriteLine("You can also use custom delimiters in the format: //[delimiter]\\n[numbers].");
+        Console.WriteLine("Type 'exit' or press Ctrl+C to quit.");
 
-            // Check if input is null or exit command
-            if (input == null || input.ToLower() == "exit")
-                break;
-
-            // Replace literal "\n" with the actual newline character for command line input
-            input = input.Replace(@"\n", "\n");
-
-            // Call the Add method and output the result
+        while (true)
+        {
             try
             {
-                int result = calculator.Add(input); // Safe because Add now accepts nullable string
-                Console.WriteLine($"The result is: {result}");
+                // Read input from the user
+                Console.Write("\nInput: ");
+                string? input = Console.ReadLine();
+
+                // Check if input is null or 'exit'
+                if (input == null || input.ToLower() == "exit")
+                {
+                    Console.WriteLine("Exiting the program...");
+                    break;
+                }
+
+                // Calculate the result using the StringCalculator
+                int result = calculator.Add(input);
+
+                // Display the result
+                Console.WriteLine($"Result: {result}");
+            }
+            catch (ArgumentException ex)
+            {
+                // Handle exceptions such as negative numbers
+                Console.WriteLine($"Error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle other exceptions
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }
