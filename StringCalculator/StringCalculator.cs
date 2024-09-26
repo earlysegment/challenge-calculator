@@ -4,16 +4,27 @@ using System.Collections.Generic;
 
 public class StringCalculator
 {
+    private readonly bool _denyNegativeNumbers;
+    private readonly int _upperBound;
+    private string[] _delimiters;
+
+    // Constructor with command-line argument options
+    public StringCalculator(bool denyNegativeNumbers = true, int upperBound = 1000, string[]? customDelimiters = null)
+    {
+        _denyNegativeNumbers = denyNegativeNumbers;
+        _upperBound = upperBound;
+        _delimiters = customDelimiters ?? new[] { ",", "\n" };
+    }
+
     public int Add(string? numbers)
     {
         if (string.IsNullOrWhiteSpace(numbers)) return 0;
 
         // Parse delimiters and get the updated number string
-        string[] delimiters = { ",", "\n" };
-        numbers = ParseDelimiters(numbers, ref delimiters);
+        numbers = ParseDelimiters(numbers, ref _delimiters);
 
         // Split and sum the numbers
-        var numberArray = SplitNumbers(numbers, delimiters);
+        var numberArray = SplitNumbers(numbers, _delimiters);
         return CalculateSumWithFormula(numberArray);
     }
 
@@ -79,12 +90,20 @@ public class StringCalculator
             {
                 if (result < 0)
                 {
-                    negativeNumbers.Add(result);
-                    formulaParts.Add($"({result})");  // Negative numbers in parentheses
+                    if (_denyNegativeNumbers)
+                    {
+                        negativeNumbers.Add(result);
+                        formulaParts.Add($"({result})");  // Negative numbers in parentheses
+                    }
+                    else
+                    {
+                        formulaParts.Add(result.ToString());
+                        sum += result;
+                    }
                 }
-                else if (result > 1000)
+                else if (result > _upperBound)
                 {
-                    formulaParts.Add("0");  // Numbers greater than 1000 treated as 0
+                    formulaParts.Add("0");  // Numbers greater than upper bound treated as 0
                 }
                 else
                 {
@@ -98,8 +117,8 @@ public class StringCalculator
             }
         }
 
-        // If there are negative numbers, throw an exception
-        if (negativeNumbers.Any())
+        // If there are negative numbers and they are denied, throw an exception
+        if (_denyNegativeNumbers && negativeNumbers.Any())
         {
             throw new ArgumentException($"Negatives not allowed: {string.Join(", ", negativeNumbers)}");
         }

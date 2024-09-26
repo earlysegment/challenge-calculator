@@ -4,7 +4,31 @@ class Program
 {
     static void Main(string[] args)
     {
-        var calculator = new StringCalculator();
+        // Default settings for command-line arguments
+        bool denyNegativeNumbers = true;
+        int upperBound = 1000;
+        string[] customDelimiters = { ",", "\n" };
+
+        // Parse command-line arguments
+        foreach (var arg in args)
+        {
+            if (arg.StartsWith("--delimiter="))
+            {
+                var delimiter = arg.Substring("--delimiter=".Length);
+                customDelimiters = new[] { delimiter };
+            }
+            else if (arg == "--allow-negative")
+            {
+                denyNegativeNumbers = false;
+            }
+            else if (arg.StartsWith("--upper-bound="))
+            {
+                upperBound = int.Parse(arg.Substring("--upper-bound=".Length));
+            }
+        }
+
+        // Instantiate the calculator with parsed command-line arguments
+        var calculator = new StringCalculator(denyNegativeNumbers, upperBound, customDelimiters);
 
         // Handle Ctrl+C to exit the loop gracefully
         Console.CancelKeyPress += (sender, e) =>
@@ -13,11 +37,17 @@ class Program
             Environment.Exit(0); // Immediately terminate the program
         };
 
+        // Display information for the user
         Console.WriteLine("String Calculator");
         Console.WriteLine("Enter a string of numbers separated by commas or newlines.");
         Console.WriteLine("You can also use custom delimiters in the format: //[delimiter]\\n[numbers].");
+        Console.WriteLine("Available command-line options:");
+        Console.WriteLine("--delimiter=\"[delimiter]\" to set a custom delimiter.");
+        Console.WriteLine("--allow-negative to allow negative numbers.");
+        Console.WriteLine("--upper-bound=[number] to set the upper bound for numbers.");
         Console.WriteLine("Type 'exit' or press Ctrl+C to quit.");
 
+        // Main input loop
         while (true)
         {
             try
