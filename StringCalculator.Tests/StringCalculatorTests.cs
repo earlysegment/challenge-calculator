@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using System;
+using System.IO;
 
 [TestFixture]
 public class StringCalculatorTests
@@ -165,5 +167,48 @@ public class StringCalculatorTests
         var calculator = new StringCalculator();
         var ex = Assert.Throws<ArgumentException>(() => calculator.Add("//[***][#]\n3***-2#4"));
         Assert.That(ex.Message, Is.EqualTo("Negatives not allowed: -2"));
+    }
+
+    // Requirement Stretch Goal 1: Display the formula used for calculation
+   private StringWriter _stringWriter;
+
+    [SetUp]
+    public void Setup()
+    {
+        _stringWriter = new StringWriter();
+        Console.SetOut(_stringWriter);  // Redirect console output to the StringWriter
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _stringWriter.Dispose();  // Dispose of the StringWriter
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });  // Restore console output
+    }
+
+    [Test]
+    public void Add_DisplayFormulaForValidInput_ShowsCorrectFormula()
+    {
+        var calculator = new StringCalculator();
+        calculator.Add("2,,4,rrrr,1001,6");
+
+        // Get the output from the console
+        var result = _stringWriter.ToString().Trim();
+
+        // Assert the expected formula output
+        Assert.That(result, Is.EqualTo("Formula: 2 + 0 + 4 + 0 + 0 + 6 = 12"));
+    }
+
+    [Test]
+    public void Add_DisplayFormulaForCustomDelimiter_ShowsCorrectFormula()
+    {
+        var calculator = new StringCalculator();
+        calculator.Add("//#\n2#5");
+
+        // Get the output from the console
+        var result = _stringWriter.ToString().Trim();
+
+        // Assert the expected formula output
+        Assert.That(result, Is.EqualTo("Formula: 2 + 5 = 7"));
     }
 }

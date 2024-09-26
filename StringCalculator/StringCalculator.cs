@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 public class StringCalculator
 {
@@ -15,7 +14,7 @@ public class StringCalculator
 
         // Split and sum the numbers
         var numberArray = SplitNumbers(numbers, delimiters);
-        return CalculateSum(numberArray);
+        return CalculateSumWithFormula(numberArray);
     }
 
     // Parse the custom delimiters and update the number string
@@ -51,9 +50,9 @@ public class StringCalculator
     private string[] ParseMultipleDelimiters(string delimiterSection)
     {
         var delimiterList = new List<string>();
-        var matches = Regex.Matches(delimiterSection, @"\[(.*?)\]");
+        var matches = System.Text.RegularExpressions.Regex.Matches(delimiterSection, @"\[(.*?)\]");
 
-        foreach (Match match in matches)
+        foreach (System.Text.RegularExpressions.Match match in matches)
         {
             delimiterList.Add(match.Groups[1].Value);
         }
@@ -67,10 +66,11 @@ public class StringCalculator
         return numbers.Split(delimiters, StringSplitOptions.None);
     }
 
-    // Calculate the sum of the numbers and handle negatives and large numbers
-    private int CalculateSum(string[] numberArray)
+    // Calculate the sum of the numbers, display the formula, and handle negatives and large numbers
+    private int CalculateSumWithFormula(string[] numberArray)
     {
         var negativeNumbers = new List<int>();
+        var formulaParts = new List<string>();  // To store each part of the formula
         int sum = 0;
 
         foreach (var num in numberArray)
@@ -80,18 +80,32 @@ public class StringCalculator
                 if (result < 0)
                 {
                     negativeNumbers.Add(result);
+                    formulaParts.Add($"({result})");  // Negative numbers in parentheses
                 }
-                else if (result <= 1000)
+                else if (result > 1000)
                 {
+                    formulaParts.Add("0");  // Numbers greater than 1000 treated as 0
+                }
+                else
+                {
+                    formulaParts.Add(result.ToString());
                     sum += result;
                 }
             }
+            else
+            {
+                formulaParts.Add("0");  // Invalid numbers treated as 0
+            }
         }
 
+        // If there are negative numbers, throw an exception
         if (negativeNumbers.Any())
         {
             throw new ArgumentException($"Negatives not allowed: {string.Join(", ", negativeNumbers)}");
         }
+
+        // Display the formula used for the calculation
+        Console.WriteLine($"Formula: {string.Join(" + ", formulaParts)} = {sum}");
 
         return sum;
     }
